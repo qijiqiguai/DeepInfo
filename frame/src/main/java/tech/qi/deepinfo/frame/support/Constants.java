@@ -7,6 +7,12 @@ package tech.qi.deepinfo.frame.support;
  */
 public class Constants {
 
+    public static final String LEADER_KEY = "ClusterLeader:";
+
+    public static final int BACKGROUND_RUN_INTERVAL = 10*1000;
+
+    public static final int LEADER_KEY_TIMEOUT = 30*1000;
+
     public final static String UID = "uid:";
     /**
      * [List] 存放 JobLog 的队列

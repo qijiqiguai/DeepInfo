@@ -12,6 +12,9 @@ import us.codecraft.webmagic.scheduler.MonitorableScheduler;
 import us.codecraft.webmagic.scheduler.component.DuplicateRemover;
 
 
+/**
+ * @author wangqi
+ */
 public class RedisPriorityScheduler
         extends DuplicateRemovedScheduler implements MonitorableScheduler, DuplicateRemover {
 

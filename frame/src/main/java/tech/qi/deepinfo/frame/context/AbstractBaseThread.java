@@ -2,6 +2,8 @@ package tech.qi.deepinfo.frame.context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tech.qi.deepinfo.frame.support.Util;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +11,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 线程基类
+ * @author wangqi
  */
-public abstract class AbstractBaseThread extends Thread implements Stoppable {
+public abstract class AbstractBaseThread extends Thread implements Stoppable, Initable {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -33,13 +36,11 @@ public abstract class AbstractBaseThread extends Thread implements Stoppable {
      * 默认情况下, ThreandName == ThreadID, 只有同一个类型的线程开很多个的时候, 才需要单独设置ID
      */
     public AbstractBaseThread(String threadName) {
-        super(threadName);
         this.threadName = threadName;
         this.threadId = threadName;
     }
 
     public AbstractBaseThread(String threadName, String threadId) {
-        super(threadName);
         this.threadName = threadName;
         this.threadId = threadId;
     }
@@ -66,7 +67,7 @@ public abstract class AbstractBaseThread extends Thread implements Stoppable {
                 }
 
                 if (interval < 0) { //一次性任务, 直接停掉
-                    stopMe();
+                    stop();
                 }
             }
         } catch (Exception e) {
@@ -86,17 +87,12 @@ public abstract class AbstractBaseThread extends Thread implements Stoppable {
                 logger.info(  "Thread: " + threadName + "-" + threadId + " 执行了 " + successCount + "次");
             }
             logger.debug(threadName + " executed, threadId=" + threadId + " SuccessCount: " + successCount + " LastExecTime: " + lastExecutedTime);
-        } catch (WakeupException e) { //From Kafka
-            if (!closed.get()) {
-                logger.warn("WakeupException at closed ", e);
-            } else {
-                logger.error("WakeupException", e);
-            }
-        } catch (Exception e) {
+        }catch (Exception e) {
             failCount++;
             logger.error("AThread execute error, Thread: " + threadName + "-" + threadId, e);
         }
     }
+
 
     @Override
     public void stopMe() {
@@ -120,6 +116,7 @@ public abstract class AbstractBaseThread extends Thread implements Stoppable {
         }
         return status;
     }
+
 //Getters & Setters
     public String getThreadName() {
         return threadName;

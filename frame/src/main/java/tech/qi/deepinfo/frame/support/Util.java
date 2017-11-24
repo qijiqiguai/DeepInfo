@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -13,6 +14,8 @@ import java.util.*;
  */
 public class Util {
     private static Logger logger = LoggerFactory.getLogger(Util.class);
+
+    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
     public static String getExceptionMessage(Exception e) {
         StringBuffer result =  new StringBuffer(

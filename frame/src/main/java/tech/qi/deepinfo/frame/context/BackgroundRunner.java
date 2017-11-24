@@ -1,12 +1,19 @@
 package tech.qi.deepinfo.frame.context;
 
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LifecycleState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import tech.qi.deepinfo.frame.module.leader.ClusterLeader;
+import tech.qi.deepinfo.frame.support.Constants;
+import tech.qi.deepinfo.frame.support.ThreadUtil;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  *
@@ -15,11 +22,10 @@ import java.util.concurrent.ThreadFactory;
  *
  */
 @Component
-public class BackgroundRunner implements Lifecycle{
+public class BackgroundRunner implements Lifecycle {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     ClusterLeader clusterLeader;
-
     private ExecutorService timer;
     private ExecutorService runner;
     private Set<Background> backgrounds;
@@ -30,14 +36,7 @@ public class BackgroundRunner implements Lifecycle{
         // 确保写入和使用是相互不影响的
         backgrounds = new CopyOnWriteArraySet<>();
         timer = ThreadUtil.singleThread("Background-Runner-Timer");
-
-        class JobRunnerTf implements ThreadFactory {
-            @Override
-            public Thread newThread(Runnable r) {
-                return new Thread(r, "Background-Runner");
-            }
-        }
-        runner = Executors.newFixedThreadPool(5, new JobRunnerTf());
+        runner = ThreadUtil.fixedThreadPool(5, "Background-Runner");
         this.clusterLeader = clusterLeader;
         addBackground(clusterLeader);
         clusterLeader.start();
@@ -47,6 +46,11 @@ public class BackgroundRunner implements Lifecycle{
         if( null != background ){
             backgrounds.add(background);
         }
+    }
+
+    @Override
+    public void init() throws LifecycleException {
+
     }
 
     @Override
@@ -99,8 +103,34 @@ public class BackgroundRunner implements Lifecycle{
         timer.shutdown();
     }
 
+
     @Override
-    public boolean isRunning() {
-        return running;
+    public void addLifecycleListener(LifecycleListener lifecycleListener) {
+
+    }
+
+    @Override
+    public LifecycleListener[] findLifecycleListeners() {
+        return new LifecycleListener[0];
+    }
+
+    @Override
+    public void removeLifecycleListener(LifecycleListener lifecycleListener) {
+
+    }
+
+    @Override
+    public void destroy() throws LifecycleException {
+
+    }
+
+    @Override
+    public LifecycleState getState() {
+        return null;
+    }
+
+    @Override
+    public String getStateName() {
+        return null;
     }
 }

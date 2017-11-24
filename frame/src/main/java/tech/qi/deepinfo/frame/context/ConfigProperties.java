@@ -1,5 +1,9 @@
 package tech.qi.deepinfo.frame.context;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -13,7 +17,7 @@ public class ConfigProperties extends PropertyPlaceholderConfigurer {
     private static Map<String, String> ctxPropertiesMap;
 
     @Override
-    protected void processProperties( ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) throws BeansException {
+    protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) throws BeansException {
         super.processProperties(beanFactoryToProcess, props);
         ctxPropertiesMap = new HashMap<>();
         for (Object key : props.keySet()) {

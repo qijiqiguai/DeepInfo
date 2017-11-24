@@ -8,11 +8,13 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * @author wangqi
+ */
 public class ThreadManager {
 
     private static Logger logger = LoggerFactory.getLogger(ThreadManager.class);
 
-//    private static List<AbstractBaseThread> threadList = Collections.synchronizedList(new ArrayList());
     private static List<AbstractBaseThread> threadList = new CopyOnWriteArrayList();
 
     public static void addThread(AbstractBaseThread... threads) {

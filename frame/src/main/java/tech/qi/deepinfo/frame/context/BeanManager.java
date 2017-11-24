@@ -1,10 +1,18 @@
 package tech.qi.deepinfo.frame.context;
 
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
+/**
+ * @author wangqi
+ */
 public class BeanManager {
     private static Logger logger = LoggerFactory.getLogger(BeanManager.class);
     private static ApplicationContext applicationContext;
@@ -32,12 +40,12 @@ public class BeanManager {
      *
      * @param beanClass
      */
-    public static void initBeans(Class... beanClass) {
+    public static void initBeans(Class... beanClass) throws LifecycleException {
         int count = 0;
         for (Class clazz : beanClass) {
-            Initable obj;
+            Lifecycle obj;
             try {
-                obj = (Initable) getBean(clazz);
+                obj = (Lifecycle) getBean(clazz);
             } catch (Exception e) {
                 logger.error(clazz.getSimpleName() + " 不是 Initable 类型的", e);
                 continue;
@@ -56,14 +64,14 @@ public class BeanManager {
     /**
      * 仅包含了 Spring 管理的那些 Bean 的关闭, 并不包括独立线程的关闭.
      */
-    public static void stopAll() {
-        List<Stoppable> stoppableList = getBeanList(Stoppable.class);
+    public static void stopAll() throws LifecycleException {
+        List<Lifecycle> stoppableList = getBeanList(Lifecycle.class);
         if (stoppableList == null || stoppableList.isEmpty()) {
             logger.warn("系统中没有任何的 StoppableBean");
         } else {
-            for (Stoppable bean : stoppableList) {
+            for (Lifecycle bean : stoppableList) {
                 logger.info("Begin to stop bean: " + bean);
-                bean.stopMe();
+                bean.stop();
             }
             logger.info("一共关闭bean个数:" + stoppableList.size());
         }
