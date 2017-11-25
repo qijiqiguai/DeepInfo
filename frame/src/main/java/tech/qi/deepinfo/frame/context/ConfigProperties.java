@@ -11,6 +11,7 @@ import java.util.Properties;
 /**
  * 通常, Handler 表示对一种 外部资源或者模块 的初始化和操作过程, 所以通常继承自AbstractVerticle,
  * 但是唯独 PropertyHandler
+ * @author wangqi
  */
 public class ConfigProperties extends PropertyPlaceholderConfigurer {
 

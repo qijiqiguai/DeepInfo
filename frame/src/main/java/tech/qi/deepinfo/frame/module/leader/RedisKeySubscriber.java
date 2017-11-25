@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPubSub;
-import tech.qi.deepinfo.frame.support.Constants;
+import tech.qi.deepinfo.frame.core.Constants;
 import tech.qi.deepinfo.frame.support.ThreadUtil;
 
 import java.util.List;
@@ -34,6 +34,7 @@ public class RedisKeySubscriber implements Lifecycle {
     @Autowired
     @Qualifier("jediscluster")
     private JedisCluster jedisCluster;
+
     private ExecutorService subscriber;
 
     public RedisKeySubscriber(){

@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import tech.qi.deepinfo.frame.core.AbstractHandler;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +72,7 @@ public class BeanManager {
             logger.warn("系统中没有任何的 StoppableBean");
         } else {
             for (Lifecycle bean : stoppableList) {
-                logger.info("Begin to stop bean: " + bean);
+                logger.info("Begin to stopMe bean: " + bean);
                 bean.stop();
             }
             logger.info("一共关闭bean个数:" + stoppableList.size());

@@ -1,4 +1,4 @@
-package tech.qi.deepinfo.frame.support;
+package tech.qi.deepinfo.frame.core;
 
 /**
  *

@@ -1,4 +1,4 @@
-package tech.qi.deepinfo.frame.context;
+package tech.qi.deepinfo.frame.core;
 
 /**
  *
@@ -38,7 +38,8 @@ public interface Background {
 
     /**
      * 接口的默认方法，Since Java 1.8
-     * 由于 BackgroundRunner 轮转时间比较短, 所以不是每次都需要执行当前对象的 process 方法。需要通过这个方法来校验一下本次轮转是否需要执行。
+     * 由于 BackgroundRunner 轮转时间比较短,
+     * 所以不是每次都需要执行当前对象的 process 方法。需要通过这个方法来校验一下本次轮转是否需要执行。
      * 可以被重写，支持自定义逻辑。
      * @return
      */

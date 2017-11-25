@@ -1,4 +1,4 @@
-package tech.qi.deepinfo.frame.context;
+package tech.qi.deepinfo.frame.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,21 +6,22 @@ import org.slf4j.LoggerFactory;
 /**
  * 任何第三方资源管理的, 都应该作为 Handler
  * todo 提供界面可配置管理方式
+ *
+ * @author wangqi
  */
-public abstract class AbstractHandler implements Initable, Stoppable {
+public abstract class AbstractHandler implements Lifecycle {
 
     private static Logger logger = LoggerFactory.getLogger(AbstractHandler.class);
 
     private String name;
 
+    @Override
     public abstract void init();
 
     public abstract void reload();
 
     @Override
-    public void stopMe(){
-        logger.debug(this.name + " stopped");
-    }
+    public abstract void stopMe();
 
     public AbstractHandler(String name) {
         this.name = name;
@@ -34,12 +35,8 @@ public abstract class AbstractHandler implements Initable, Stoppable {
         this.name = name;
     }
 
-    /**
-     * 执行
-     * @param command
-     */
     public void execute(Command command){
-        if(command==null){
+        if(command == null){
             logger.warn("command is null");
             return;
         }
@@ -54,21 +51,17 @@ public abstract class AbstractHandler implements Initable, Stoppable {
                 stopMe();
                 return;
             default:
-                logger.warn("无法处理命令："+command);
+                logger.warn("无法处理命令：" + command);
         }
     }
 
-    /**
-     * 执行
-     * @param command
-     */
     public void execute(String command){
         Command cmd = Command.parseCommand(command);
         execute(cmd);
     }
 
     public enum Command {
-        INIT,RELOAD,STOP;
+        INIT,RELOAD,STOP, DESTORY;
 
         public static Command parseCommand(String command){
             if(command.toUpperCase().equals(INIT.name())){

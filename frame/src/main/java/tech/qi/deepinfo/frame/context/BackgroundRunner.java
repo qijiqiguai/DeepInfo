@@ -1,15 +1,14 @@
 package tech.qi.deepinfo.frame.context;
 
-import org.apache.catalina.Lifecycle;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.LifecycleListener;
-import org.apache.catalina.LifecycleState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import tech.qi.deepinfo.frame.core.Background;
+import tech.qi.deepinfo.frame.core.Lifecycle;
+import tech.qi.deepinfo.frame.core.LifecycleException;
 import tech.qi.deepinfo.frame.module.leader.ClusterLeader;
-import tech.qi.deepinfo.frame.support.Constants;
+import tech.qi.deepinfo.frame.core.Constants;
 import tech.qi.deepinfo.frame.support.ThreadUtil;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -24,12 +23,13 @@ import java.util.concurrent.ExecutorService;
 @Component
 public class BackgroundRunner implements Lifecycle {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final String name = "BackgroundRunner";
+    private Lifecycle.State state;
 
     ClusterLeader clusterLeader;
     private ExecutorService timer;
     private ExecutorService runner;
     private Set<Background> backgrounds;
-    private boolean running;
 
     @Autowired
     public BackgroundRunner( ClusterLeader clusterLeader ){
@@ -40,6 +40,7 @@ public class BackgroundRunner implements Lifecycle {
         this.clusterLeader = clusterLeader;
         addBackground(clusterLeader);
         clusterLeader.start();
+        state = State.NEW;
     }
 
     public void addBackground(Background background) {
@@ -49,88 +50,85 @@ public class BackgroundRunner implements Lifecycle {
     }
 
     @Override
-    public void init() throws LifecycleException {
-
+    public void init() {
+        synchronized (this.state) {
+            this.state = State.INITIALIZING;
+            // Empty
+            this.state = State.INITIALIZED;
+        }
     }
 
     @Override
     public void start() {
-        if( running ){
-            return;
-        }
-        // 提交一个轮转任务，持续调用后台任务列表。
-        timer.execute(() -> {
-            boolean run = true;
-            while (!Thread.currentThread().isInterrupted() && run) {
-                logger.debug("BackgroundRunner is running");
-                try {
-                    // 调用每一个后台任务的 backgroundProcess 方法。执行之前需要校验本次是否执行。
-                    if( null!=backgrounds && backgrounds.size()>0 ){
-                        backgrounds.forEach( o -> {
-                            try {
-                                // 非Leader任务，或者是Leader任务且当前就是Leader的情况下为 OK
-                                boolean conditionOk = !o.leaderJob() || ( o.leaderJob() && clusterLeader.isLeader() );
-                                if( o.runAtThisRound() && conditionOk){
-                                    logger.debug("BackgroundRunner ConditionOK, Execute:" + o.getClass().getSimpleName());
-                                    // 提交到Runner去异步执行，而不是阻塞定时线程
-                                    runner.submit(() -> o.backgroundProcess());
+        synchronized (this.state) {
+            this.state = State.STARTING;
+
+            // 提交一个轮转任务，持续调用后台任务列表。
+            timer.execute(() -> {
+                boolean run = true;
+                while (!Thread.currentThread().isInterrupted() && run) {
+                    logger.debug("BackgroundRunner is running");
+                    try {
+                        // 调用每一个后台任务的 backgroundProcess 方法。执行之前需要校验本次是否执行。
+                        if( null!=backgrounds && backgrounds.size()>0 ){
+                            backgrounds.forEach( o -> {
+                                try {
+                                    // 非Leader任务，或者是Leader任务且当前就是Leader的情况下为 OK
+                                    boolean conditionOk = !o.leaderJob() || ( o.leaderJob() && clusterLeader.isLeader() );
+                                    if( o.runAtThisRound() && conditionOk){
+                                        logger.debug("BackgroundRunner ConditionOK, Execute:" + o.getClass().getSimpleName());
+                                        // 提交到Runner去异步执行，而不是阻塞定时线程
+                                        runner.submit(() -> o.backgroundProcess());
+                                    }
+                                } catch (Exception e) {
+                                    logger.warn( o.getClass().getSimpleName() + " Background Job Run Fail.", e );
                                 }
-                            } catch (Exception e) {
-                                logger.warn( o.getClass().getSimpleName() + " Background Job Run Fail.", e );
-                            }
-                        } );
-                    }else {
-                        logger.debug( "BackgroundRunner have no job todo" );
+                            } );
+                        }else {
+                            logger.debug( "BackgroundRunner have no job todo" );
+                        }
+                        Thread.sleep(Constants.BACKGROUND_RUN_INTERVAL);
+                    } catch (InterruptedException e) {
+                        logger.warn( "BackgroundRunner Sleep Interrupted", e );
+                        run = false;
+                    } catch (Exception e) {
+                        logger.warn( "BackgroundRunner Unexpected Exception", e );
                     }
-                    Thread.sleep(Constants.BACKGROUND_RUN_INTERVAL);
-                } catch (InterruptedException e) {
-                    logger.warn( "BackgroundRunner Sleep Interrupted", e );
-                    run = false;
-                } catch (Exception e) {
-                    logger.warn( "BackgroundRunner Unexpected Exception", e );
                 }
-            }
-        });
-        running =  true;
+            });
+
+            this.state = State.STARTED;
+        }
     }
 
     @Override
-    public void stop() {
-        if( !running ){
+    public void stopMe() throws LifecycleException {
+        if( this.state==State.STOPPED || this.state==State.STOPPING ){
             return;
         }
-        running =  false;
-        timer.shutdown();
-    }
-
-
-    @Override
-    public void addLifecycleListener(LifecycleListener lifecycleListener) {
-
-    }
-
-    @Override
-    public LifecycleListener[] findLifecycleListeners() {
-        return new LifecycleListener[0];
-    }
-
-    @Override
-    public void removeLifecycleListener(LifecycleListener lifecycleListener) {
-
+        synchronized (this.state) {
+            this.state = State.STOPPING;
+            timer.shutdown();
+            this.state = State.STOPPED;
+        }
     }
 
     @Override
     public void destroy() throws LifecycleException {
-
+        synchronized (this.state) {
+            this.state = State.DESTROYING;
+            // Empty
+            this.state = State.DESTROYED;
+        }
     }
 
     @Override
-    public LifecycleState getState() {
-        return null;
+    public State getState() {
+        return this.state;
     }
 
     @Override
     public String getStateName() {
-        return null;
+        return this.name;
     }
 }

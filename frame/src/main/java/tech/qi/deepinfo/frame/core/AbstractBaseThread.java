@@ -1,7 +1,8 @@
-package tech.qi.deepinfo.frame.context;
+package tech.qi.deepinfo.frame.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tech.qi.deepinfo.frame.context.ThreadManager;
 import tech.qi.deepinfo.frame.support.Util;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 线程基类
  * @author wangqi
  */
-public abstract class AbstractBaseThread extends Thread implements Stoppable, Initable {
+public abstract class AbstractBaseThread extends Thread implements Lifecycle {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -26,9 +27,14 @@ public abstract class AbstractBaseThread extends Thread implements Stoppable, In
     private long successCount;
     private long failCount;
 
-    //周期，毫秒数(小于0则为一次性执行)
+    /**
+     * 周期，毫秒数(小于0则为一次性执行)
+     */
     private long interval = 0;
-    //对于周期性thread，是 先sleep再执行任务 还是 先执行任务再sleep
+
+    /**
+     * 对于周期性thread，是 先sleep再执行任务 还是 先执行任务再sleep
+     */
     private boolean sleepBeforeTask = false;
 
 

@@ -28,8 +28,8 @@ import org.apache.http.impl.cookie.BrowserCompatSpecFactory;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tech.qi.deepinfo.frame.support.ServiceException;
-import tech.qi.deepinfo.frame.support.StatusCode;
+import tech.qi.deepinfo.frame.core.ServiceException;
+import tech.qi.deepinfo.frame.core.StatusCode;
 import tech.qi.deepinfo.frame.support.Util;
 import us.codecraft.webmagic.utils.HttpConstant;
 

@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.Lifecycle;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisCluster;
-import tech.qi.deepinfo.frame.context.Background;
-import tech.qi.deepinfo.frame.support.Constants;
+import tech.qi.deepinfo.frame.core.Background;
+import tech.qi.deepinfo.frame.core.Constants;
 
 import java.util.function.Function;
 
