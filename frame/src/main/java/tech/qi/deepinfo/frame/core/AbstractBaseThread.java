@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 线程基类
+ * 后台任务线程，基类
  * @author wangqi
  */
 public abstract class AbstractBaseThread extends Thread implements Lifecycle {
@@ -26,6 +26,7 @@ public abstract class AbstractBaseThread extends Thread implements Lifecycle {
     private Date lastExecutedTime;
     private long successCount;
     private long failCount;
+    private Lifecycle.Status status;
 
     /**
      * 周期，毫秒数(小于0则为一次性执行)
@@ -51,7 +52,9 @@ public abstract class AbstractBaseThread extends Thread implements Lifecycle {
         this.threadId = threadId;
     }
 
-    //具体业务方法，子类实现
+    /**
+     * 具体业务类实现
+     */
     protected abstract void doTask();
 
     @Override
@@ -101,13 +104,23 @@ public abstract class AbstractBaseThread extends Thread implements Lifecycle {
 
 
     @Override
+    public void init() throws LifecycleException {
+
+    }
+
+    @Override
     public void stopMe() {
         logger.info("停止thread,name=" + this.getName() + ",threadId=" + this.getThreadId() + ",successCount=" + successCount + ",failCount=" + failCount);
         closed.set(true);
         ThreadManager.removeThread(this);
     }
 
-    public Map<String, Object> getStatus() {
+    @Override
+    public String getStateName() {
+        return null;
+    }
+
+    public Map<String, Object> getDetails() {
         Map<String, Object> status = new HashMap<>();
         status.put("threadId", this.threadId);
         status.put("threadName", this.threadName);
@@ -123,7 +136,11 @@ public abstract class AbstractBaseThread extends Thread implements Lifecycle {
         return status;
     }
 
-//Getters & Setters
+
+    /**
+     * Getters & Setters
+     * @return
+     */
     public String getThreadName() {
         return threadName;
     }

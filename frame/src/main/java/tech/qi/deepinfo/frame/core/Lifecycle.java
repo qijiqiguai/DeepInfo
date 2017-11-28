@@ -6,7 +6,7 @@ package tech.qi.deepinfo.frame.core;
  * @date 2017/11/24 下午7:57
  */
 public interface Lifecycle {
-    enum State {
+    enum Status {
         NEW(false, "new"),
 
         INITIALIZING(false, "initializing"),
@@ -26,7 +26,7 @@ public interface Lifecycle {
         private final boolean available;
         private final String lifecycleEvent;
 
-        State(boolean available, String lifecycleEvent) {
+        Status(boolean available, String lifecycleEvent) {
             this.available = available;
             this.lifecycleEvent = lifecycleEvent;
         }
@@ -48,7 +48,7 @@ public interface Lifecycle {
 
     void destroy() throws LifecycleException;
 
-    State getState();
+    Status getStatus();
 
     String getStateName();
 }

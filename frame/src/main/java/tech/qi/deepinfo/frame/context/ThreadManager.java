@@ -110,14 +110,14 @@ public class ThreadManager {
 
     public static List<Map<String, Object>> getAllThreadStatus() {
         List<Map<String, Object>> statusList = new ArrayList<>();
-        threadList.stream().forEach( o -> statusList.add( o.getStatus() ));
+        threadList.stream().forEach( o -> statusList.add( o.getDetails() ));
         return statusList;
     }
 
     public static Map<String, Object> getThreadStatus(String threadId) {
         for(AbstractBaseThread thread : threadList){
             if(thread.getThreadId().equals(threadId)){
-                return thread.getStatus();
+                return thread.getDetails();
             }
         }
         return null;

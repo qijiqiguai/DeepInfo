@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutorService;
 public class BackgroundRunner implements Lifecycle {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final String name = "BackgroundRunner";
-    private Lifecycle.State state;
+    private Status status;
 
     ClusterLeader clusterLeader;
     private ExecutorService timer;
@@ -40,7 +40,7 @@ public class BackgroundRunner implements Lifecycle {
         this.clusterLeader = clusterLeader;
         addBackground(clusterLeader);
         clusterLeader.start();
-        state = State.NEW;
+        status = Status.NEW;
     }
 
     public void addBackground(Background background) {
@@ -51,17 +51,17 @@ public class BackgroundRunner implements Lifecycle {
 
     @Override
     public void init() {
-        synchronized (this.state) {
-            this.state = State.INITIALIZING;
+        synchronized (this.status) {
+            this.status = Status.INITIALIZING;
             // Empty
-            this.state = State.INITIALIZED;
+            this.status = Status.INITIALIZED;
         }
     }
 
     @Override
     public void start() {
-        synchronized (this.state) {
-            this.state = State.STARTING;
+        synchronized (this.status) {
+            this.status = Status.STARTING;
 
             // 提交一个轮转任务，持续调用后台任务列表。
             timer.execute(() -> {
@@ -97,34 +97,34 @@ public class BackgroundRunner implements Lifecycle {
                 }
             });
 
-            this.state = State.STARTED;
+            this.status = Status.STARTED;
         }
     }
 
     @Override
     public void stopMe() throws LifecycleException {
-        if( this.state==State.STOPPED || this.state==State.STOPPING ){
+        if( this.status == Status.STOPPED || this.status == Status.STOPPING ){
             return;
         }
-        synchronized (this.state) {
-            this.state = State.STOPPING;
+        synchronized (this.status) {
+            this.status = Status.STOPPING;
             timer.shutdown();
-            this.state = State.STOPPED;
+            this.status = Status.STOPPED;
         }
     }
 
     @Override
     public void destroy() throws LifecycleException {
-        synchronized (this.state) {
-            this.state = State.DESTROYING;
+        synchronized (this.status) {
+            this.status = Status.DESTROYING;
             // Empty
-            this.state = State.DESTROYED;
+            this.status = Status.DESTROYED;
         }
     }
 
     @Override
-    public State getState() {
-        return this.state;
+    public Status getStatus() {
+        return this.status;
     }
 
     @Override
