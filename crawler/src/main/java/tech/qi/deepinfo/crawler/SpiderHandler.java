@@ -1,40 +1,8 @@
 package tech.qi.deepinfo.crawler;
 
-import org.assertj.core.util.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import tv.bo123.common.context.ThreadManager;
-import tv.bo123.common.dao.services.LiveInfoService;
-import tv.bo123.common.entity.Anchor;
-import tv.bo123.common.entity.LiveInfo;
-import tv.bo123.common.module.AbstractHandler;
-import tv.bo123.common.module.redis.RedisHandler;
-import tv.bo123.common.module.spider.RedisPriorityScheduler;
-import tv.bo123.common.support.constant.Constants;
-import tv.bo123.scrapper.core.spider.LiveDownloader;
-import tv.bo123.scrapper.core.spider.LivePipeline;
-import tv.bo123.scrapper.core.spider.LiveProcessor;
-import tv.bo123.scrapper.core.thread.SpiderEnvReloadThread;
-import tv.bo123.scrapper.core.thread.SpiderJobFailCheckThread;
-import tv.bo123.scrapper.core.thread.SpiderJobLogStoreThread;
-import tv.bo123.scrapper.core.thread.SpiderStatusCheckThread;
-import tv.bo123.scrapper.dao.service.AnchorService;
-import us.codecraft.webmagic.Request;
-import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.monitor.SpiderMonitor;
-import us.codecraft.webmagic.pipeline.Pipeline;
-import us.codecraft.webmagic.scheduler.MonitorableScheduler;
-
 import javax.management.JMException;
-import java.util.List;
 
 /**
- * Created by fenghong on 2016/6/27.
  */
 @Component
 public class SpiderHandler extends AbstractHandler{
