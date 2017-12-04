@@ -12,10 +12,8 @@ import tech.qi.deepinfo.frame.module.redis.RedisHandler;
 import tech.qi.deepinfo.frame.module.spider.RedisPriorityScheduler;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.downloader.Downloader;
 import us.codecraft.webmagic.monitor.SpiderMonitor;
 import us.codecraft.webmagic.pipeline.Pipeline;
-import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.scheduler.MonitorableScheduler;
 
 import javax.management.JMException;
@@ -36,21 +34,21 @@ public class SpiderHandler extends AbstractHandler {
     @Value("${spider.threads}")
     private int threads;
 
-    @Value("${spider.status.check.time}")
+    @Value("${spider.status.check.time.ms}")
     private long statusCheckTime;
 
-    @Value("${spider.env.reload.time}")
+    @Value("${spider.env.reload.time.ms}")
     private long envReloadTime;
-
-    @Value("${sys.cache.liveInfo.days}")
-    private int liveInfoCacheDays;
 
     @Autowired
     RedisHandler redisHandler;
+
     @Autowired
-    PageProcessor processor;
+    WebProcessor webProcessor;
+
     @Autowired
-    Downloader webDownloader;
+    WebDownloader webDownloader;
+
     @Autowired
     Pipeline pipeline;
 
@@ -81,8 +79,8 @@ public class SpiderHandler extends AbstractHandler {
 
         JedisPool jedisPool = redisHandler.newJedisPool();
         spiderScheduler = new RedisPriorityScheduler("scrapper", jedisPool);
-        spider = Spider.create(processor)
-                .setUUID(redisHandler.getUID("scrapper_spider_id"))
+        spider = Spider.create(webProcessor)
+                .setUUID(redisHandler.getUID("spider"))
                 .setDownloader(webDownloader)
                 .setPipelines(pipelineList)
                 .setScheduler(spiderScheduler)
@@ -91,7 +89,7 @@ public class SpiderHandler extends AbstractHandler {
         spider.setEmptySleepTime(3000);
 
         Request initReq = new Request();
-        initReq.setUrl("xueqiu.com");
+        initReq.setUrl("https://xueqiu.com");
         spiderScheduler.push( initReq ,spider);
     }
 

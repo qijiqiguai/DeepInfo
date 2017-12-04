@@ -32,7 +32,9 @@ public class WebDownloader extends AbstractDownloader {
             resWrapper.setRawText(result);
             resWrapper.setStatusCode(200);
         } catch (Exception e) {
-
+            e.printStackTrace();
+            resWrapper.setRawText(e.getLocalizedMessage());
+            resWrapper.setStatusCode(500);
         }
         return resWrapper;
     }

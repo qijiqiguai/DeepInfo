@@ -1,7 +1,5 @@
 package tech.qi.deepinfo.crawler.spider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,8 +17,6 @@ import us.codecraft.webmagic.processor.PageProcessor;
 
 @Component
 public class WebProcessor implements PageProcessor {
-    private static Logger logger = LoggerFactory.getLogger(WebProcessor.class);
-
     /**
      * Site 可以设 RequestHeader | Proxy | ProxyPool | Cookie, 参加 Downloader 中对 Request 的包装
      */
@@ -37,7 +33,7 @@ public class WebProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
-
+        System.out.println(page.getRawText());
     }
 
     @Override

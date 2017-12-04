@@ -16,6 +16,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <version>1.5.9.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
         </dependency>
         <!-- WebMagic Start -->
         <dependency>
@@ -27,17 +33,18 @@
             <groupId>us.codecraft</groupId>
             <artifactId>webmagic-extension</artifactId>
             <version>0.5.3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jedis</artifactId>
+                    <groupId>redis.clients</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- WebMagic End -->
         <dependency>
             <groupId>tech.qi.deepinfo</groupId>
             <artifactId>frame</artifactId>
             <version>0.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.8</version>
         </dependency>
     </dependencies>
 

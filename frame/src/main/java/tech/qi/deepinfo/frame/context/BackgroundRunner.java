@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import tech.qi.deepinfo.frame.core.Background;
 import tech.qi.deepinfo.frame.core.Lifecycle;
 import tech.qi.deepinfo.frame.core.LifecycleException;
-import tech.qi.deepinfo.frame.module.leader.ClusterLeader;
 import tech.qi.deepinfo.frame.core.Constants;
 import tech.qi.deepinfo.frame.support.ThreadUtil;
 import java.util.Set;
@@ -26,20 +25,16 @@ public class BackgroundRunner implements Lifecycle {
     private final String name = "BackgroundRunner";
     private Status status;
 
-    ClusterLeader clusterLeader;
     private ExecutorService timer;
     private ExecutorService runner;
     private Set<Background> backgrounds;
 
     @Autowired
-    public BackgroundRunner( ClusterLeader clusterLeader ){
+    public BackgroundRunner( ){
         // 确保写入和使用是相互不影响的
         backgrounds = new CopyOnWriteArraySet<>();
         timer = ThreadUtil.singleThread("Background-Runner-Timer");
         runner = ThreadUtil.fixedThreadPool(5, "Background-Runner");
-        this.clusterLeader = clusterLeader;
-        addBackground(clusterLeader);
-        clusterLeader.start();
         status = Status.NEW;
     }
 
@@ -73,9 +68,7 @@ public class BackgroundRunner implements Lifecycle {
                         if( null!=backgrounds && backgrounds.size()>0 ){
                             backgrounds.forEach( o -> {
                                 try {
-                                    // 非Leader任务，或者是Leader任务且当前就是Leader的情况下为 OK
-                                    boolean conditionOk = !o.leaderJob() || ( o.leaderJob() && clusterLeader.isLeader() );
-                                    if( o.runAtThisRound() && conditionOk){
+                                    if( o.runAtThisRound() ){
                                         logger.debug("BackgroundRunner ConditionOK, Execute:" + o.getClass().getSimpleName());
                                         // 提交到Runner去异步执行，而不是阻塞定时线程
                                         runner.submit(() -> o.backgroundProcess());

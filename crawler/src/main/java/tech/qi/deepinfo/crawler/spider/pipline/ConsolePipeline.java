@@ -1,8 +1,6 @@
 package tech.qi.deepinfo.crawler.spider.pipline;
 
 import com.alibaba.fastjson.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
@@ -16,10 +14,8 @@ import us.codecraft.webmagic.pipeline.Pipeline;
  */
 @Component
 public class ConsolePipeline implements Pipeline {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Override
     public void process(ResultItems resultItems, Task task) {
-        logger.info("Start Pipeline Result: " + JSON.toJSONString(resultItems));
+        System.out.println("Start Pipeline Result: " + JSON.toJSONString(resultItems));
     }
 }

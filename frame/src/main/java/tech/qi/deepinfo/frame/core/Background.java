@@ -13,11 +13,6 @@ public interface Background {
     void backgroundProcess();
 
     /**
-     * 是否是 集群Leader 专有的任务，比如更新某些全局信息的状态。
-     */
-    boolean leaderJob();
-
-    /**
      * 上次执行时间
      * @return
      */
