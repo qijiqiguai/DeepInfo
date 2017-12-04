@@ -26,6 +26,7 @@
             <pattern>${PATTERN}</pattern>
         </layout>
     </appender>
+
     <logger name="tech.qi.deepinfo.crawler" level="INFO" additivity="false">
         <appender-ref ref="crawler_file" />
         <appender-ref ref="STDOUT" />
