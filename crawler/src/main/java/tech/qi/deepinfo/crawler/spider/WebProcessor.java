@@ -33,7 +33,7 @@ public class WebProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
-        System.out.println(page.getRawText());
+        // extract next page and add to TaskQueue
     }
 
     @Override

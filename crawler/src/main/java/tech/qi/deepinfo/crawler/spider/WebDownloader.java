@@ -24,19 +24,20 @@ public class WebDownloader extends AbstractDownloader {
 
     @Override
     public Page download(Request request, Task task) {
-        Page resWrapper = new Page();
-        resWrapper.setRequest(request);
+        Page result = new Page();
+        result.setRequest(request);
         try {
             HttpDownloader downloader = HttpDownloader.instance();
-            String result = downloader.download(request.getUrl(), null);
-            resWrapper.setRawText(result);
-            resWrapper.setStatusCode(200);
+            String pageContent = downloader.download(request.getUrl(), null);
+            result.setRawText(pageContent);
+            result.setStatusCode(200);
+            result.putField("page", pageContent);
         } catch (Exception e) {
             e.printStackTrace();
-            resWrapper.setRawText(e.getLocalizedMessage());
-            resWrapper.setStatusCode(500);
+            result.setRawText(e.getLocalizedMessage());
+            result.setStatusCode(500);
         }
-        return resWrapper;
+        return result;
     }
 
     /**
