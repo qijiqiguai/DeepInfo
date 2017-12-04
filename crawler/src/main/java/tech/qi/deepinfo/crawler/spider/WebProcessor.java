@@ -31,9 +31,14 @@ public class WebProcessor implements PageProcessor {
     @Autowired
     SpiderHandler spiderHandler;
 
+    /**
+     * extract next page, extract required information
+     * @param page
+     */
     @Override
     public void process(Page page) {
-        // extract next page and add to TaskQueue
+        // page.addTargetRequest(); 用于增加 NextUrl
+        page.putField("page", page.getRawText());
     }
 
     @Override

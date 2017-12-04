@@ -31,9 +31,7 @@ public class WebDownloader extends AbstractDownloader {
             String pageContent = downloader.download(request.getUrl(), null);
             result.setRawText(pageContent);
             result.setStatusCode(200);
-            result.putField("page", pageContent);
         } catch (Exception e) {
-            e.printStackTrace();
             result.setRawText(e.getLocalizedMessage());
             result.setStatusCode(500);
         }
