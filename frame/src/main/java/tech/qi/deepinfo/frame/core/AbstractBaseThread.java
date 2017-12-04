@@ -115,11 +115,6 @@ public abstract class AbstractBaseThread extends Thread implements Lifecycle {
         ThreadManager.removeThread(this);
     }
 
-    @Override
-    public String getStateName() {
-        return null;
-    }
-
     public Map<String, Object> getDetails() {
         Map<String, Object> status = new HashMap<>();
         status.put("threadId", this.threadId);

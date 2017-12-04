@@ -26,17 +26,16 @@
             <pattern>${PATTERN}</pattern>
         </layout>
     </appender>
-
-    <logger name="tech.qi.deepinfo.crawler" level="INFO" additivity="false">
+    <logger name="tech.qi.deepinfo.crawler" level="DEBUG" additivity="false">
         <appender-ref ref="crawler_file" />
         <appender-ref ref="STDOUT" />
     </logger>
-    <logger name="org.springframework" level="INFO" />
+    <logger name="org.springframework" level="DEBUG" />
     <logger name="org.springframework" level="ERROR">
         <appender-ref ref="crawler_file"/>
         <appender-ref ref="STDOUT"/>
     </logger>
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="crawler_file" />
         <appender-ref ref="STDOUT" />
     </root>

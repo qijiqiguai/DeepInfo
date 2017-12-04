@@ -49,6 +49,4 @@ public interface Lifecycle {
     void destroy() throws LifecycleException;
 
     Status getStatus();
-
-    String getStateName();
 }

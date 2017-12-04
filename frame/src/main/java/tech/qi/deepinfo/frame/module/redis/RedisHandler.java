@@ -36,10 +36,10 @@ public class RedisHandler extends AbstractHandler {
     @Value("${redis.password}")
     private String password;
 
-    @Value("${redis.namespace}")
-    private String namespace;
-
-    private JedisPool jedisPool;//非切片连接池
+    /**
+     * 非切片连接池
+     */
+    private JedisPool jedisPool;
 
     public RedisHandler() {
         super("RedisHandler");
@@ -124,11 +124,6 @@ public class RedisHandler extends AbstractHandler {
         return null;
     }
 
-    @Override
-    public String getStateName() {
-        return null;
-    }
-
     public Jedis getJedis() {
         Jedis jedis = jedisPool.getResource();
         jedis.select(database);
@@ -186,7 +181,7 @@ public class RedisHandler extends AbstractHandler {
         return null;
     }
 
-    private String getFullkey(String key) {
-        return namespace + ":" + key;
+    private String getFullkey(String prefix, String key) {
+        return prefix + ":" + key;
     }
 }

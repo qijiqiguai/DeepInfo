@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @author wangqi
  */
 @Component
 public class SpiderHandler extends AbstractHandler {
@@ -54,9 +55,7 @@ public class SpiderHandler extends AbstractHandler {
     Pipeline pipeline;
 
     private static Spider spider;
-
     private MonitorableScheduler spiderScheduler;
-
 
     public SpiderHandler() {
         super("SpiderHandler");
@@ -91,6 +90,13 @@ public class SpiderHandler extends AbstractHandler {
                 .thread(threads);
         spider.setEmptySleepTime(3000);
 
+        Request initReq = new Request();
+        initReq.setUrl("xueqiu.com");
+        spiderScheduler.push( initReq ,spider);
+    }
+
+    @Override
+    public void start() throws LifecycleException {
         logger.info("启动Spider...");
         spider.start();
         logger.info("启动Spider 结束");
@@ -100,11 +106,6 @@ public class SpiderHandler extends AbstractHandler {
         logger.info("开启SpiderManager监控结束");
 
         logger.info("初始化SpiderManager 结束");
-    }
-
-    @Override
-    public void start() throws LifecycleException {
-
     }
 
     private void startJMXMonitor(){
@@ -163,11 +164,6 @@ public class SpiderHandler extends AbstractHandler {
 
     @Override
     public Status getStatus() {
-        return null;
-    }
-
-    @Override
-    public String getStateName() {
         return null;
     }
 

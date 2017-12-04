@@ -126,9 +126,4 @@ public class BackgroundRunner implements Lifecycle {
     public Status getStatus() {
         return this.status;
     }
-
-    @Override
-    public String getStateName() {
-        return this.name;
-    }
 }

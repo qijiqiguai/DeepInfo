@@ -1,5 +1,6 @@
 package tech.qi.deepinfo.crawler.spider.pipline;
 
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,6 @@ public class ConsolePipeline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
-        logger.info("Start Pipeline Result: " + resultItems.getRequest().getExtra("TaskID"));
+        logger.info("Start Pipeline Result: " + JSON.toJSONString(resultItems));
     }
 }
