@@ -17,7 +17,8 @@ public class BatchTaskEntry extends Request {
 
     public BatchTaskEntry(String platform, String taskType, String batchId){
         //插件名是 平台名 + 任务名 + Entry拼接起来的
-        String pluginName = platform.toLowerCase() + "_" + taskType + "_" + "Entry.groovy";
+        String pluginName =
+                platform.toLowerCase() + "_" + taskType.toLowerCase() + "_" + "entry.groovy";
         pluginName = pluginName.replaceFirst(
                 pluginName.substring(0, 1),
                 pluginName.substring(0, 1).toUpperCase()
