@@ -8,7 +8,7 @@ import us.codecraft.webmagic.Request;
  *
  * 插件的逻辑非常简单，就是给一个输入，给一个输出。
  */
-public interface DownloaderPlugin {
+public interface DownloaderPlugin extends SpiderPlugin{
     /**
      *
      * @param task
