@@ -87,10 +87,6 @@ public class SpiderHandler extends AbstractHandler {
                 .setExitWhenComplete(false)
                 .thread(threads);
         spider.setEmptySleepTime(3000);
-
-        Request initReq = new Request();
-        initReq.setUrl("https://xueqiu.com");
-        spiderScheduler.push( initReq ,spider);
     }
 
     @Override
