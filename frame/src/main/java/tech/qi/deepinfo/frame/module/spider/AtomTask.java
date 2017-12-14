@@ -27,7 +27,7 @@ public class AtomTask extends Request {
      */
     public AtomTask(String batchId, String taskUid, String url, String plugin, Object extInfo){
         this.setUrl(url);
-        this.putExtra(SpiderCons.PluginName, plugin + ".groovy");
+        this.putExtra(SpiderCons.PluginName, plugin);
         this.putExtra(SpiderCons.BatchId, batchId);
         this.putExtra(SpiderCons.TaskUid, taskUid);
         this.putExtra(SpiderCons.ExtInfo, extInfo);

@@ -20,6 +20,7 @@ import us.codecraft.webmagic.scheduler.MonitorableScheduler;
 import javax.management.JMException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author wangqi
@@ -88,6 +89,10 @@ public class SpiderHandler extends AbstractHandler {
                 .setExitWhenComplete(false)
                 .thread(threads);
         spider.setEmptySleepTime(3000);
+
+        BatchTaskEntry test = new BatchTaskEntry("xueqiu", "people", UUID.randomUUID().toString());
+        test.setUrl("https://xueqiu.com/people");
+        this.addRequest(test);
     }
 
     @Override

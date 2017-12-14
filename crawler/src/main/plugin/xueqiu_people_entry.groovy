@@ -17,7 +17,6 @@ class xueqiu_people_entry extends AbstractDownloaderPlugin {
         resultPage.setRawText(page)
         resultPage.setRequest(task)
         resultPage.setStatusCode(200)
-        resultPage.setUrl(entryUrl)
         return resultPage
     }
 

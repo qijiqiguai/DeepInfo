@@ -42,6 +42,8 @@ public class PluginBasedDownloader extends AbstractDownloader {
                 throw new IllegalArgumentException("Invalid Download Plugin");
             }
         } catch (Exception e) {
+            result = new Page();
+            e.printStackTrace();
             result.setRawText(e.getLocalizedMessage());
             result.setStatusCode(500);
         }
