@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 程序关闭监听的执行逻辑，需要定义BeanManager
  * 需要关闭时出来的bean实现Stoppable接口
+ * @author wangqi
  */
 public class ShutdownHook extends Thread {
     private static Logger logger = LoggerFactory.getLogger(ShutdownHook.class);

@@ -1,4 +1,4 @@
-import tech.qi.deepinfo.frame.module.spider.DownloaderPlugin
+import tech.qi.deepinfo.frame.module.spider.AbstractDownloaderPlugin
 import us.codecraft.webmagic.Page
 import us.codecraft.webmagic.Request
 
@@ -7,7 +7,7 @@ import us.codecraft.webmagic.Request
  */
 
 
-class Xueqiu_people implements DownloaderPlugin {
+class xueqiu_people extends AbstractDownloaderPlugin {
 
     @Override
     Page run(Request task) {

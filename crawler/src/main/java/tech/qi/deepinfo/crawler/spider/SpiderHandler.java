@@ -9,6 +9,7 @@ import redis.clients.jedis.JedisPool;
 import tech.qi.deepinfo.frame.core.AbstractHandler;
 import tech.qi.deepinfo.frame.core.LifecycleException;
 import tech.qi.deepinfo.frame.module.redis.RedisHandler;
+import tech.qi.deepinfo.frame.module.spider.BatchTaskEntry;
 import tech.qi.deepinfo.frame.module.spider.RedisPriorityScheduler;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Spider;
@@ -47,7 +48,7 @@ public class SpiderHandler extends AbstractHandler {
     WebProcessor webProcessor;
 
     @Autowired
-    WebDownloader webDownloader;
+    PluginBasedDownloader webDownloader;
 
     @Autowired
     Pipeline pipeline;
